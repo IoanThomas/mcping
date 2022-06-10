@@ -67,4 +67,23 @@ mod tests {
         assert_eq!(buffer[0], 0x8a);
         assert_eq!(buffer[1], 0x07);
     }
+
+    #[test]
+    fn write_string_empty() {
+        let mut buffer = vec![];
+        write_string(&mut buffer, "").expect("failed to write string");
+
+        assert_eq!(buffer[0], 0);
+        assert_eq!(buffer.get(1), None);
+    }
+
+    #[test]
+    fn write_string_short() {
+        let mut buffer = vec![];
+        write_string(&mut buffer, "hello").expect("failed to write string");
+
+        assert_eq!(buffer[0], 5);
+        assert_eq!(buffer[1], 104);
+        assert_eq!(buffer[5], 111);
+    }
 }
