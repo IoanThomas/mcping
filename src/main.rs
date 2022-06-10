@@ -1,8 +1,22 @@
-const ADDRESS: &str = "localhost";
-const PORT: u16 = 25565;
+use clap::Parser;
+
+const DEFAULT_SERVER_PORT: u16 = 25565;
+
+#[derive(Parser)]
+#[clap(author, version, about)]
+struct Args {
+    pub address: String,
+    #[clap(short, long)]
+    pub port: Option<u16>,
+}
 
 fn main() {
-    let response = match mcping::get_server_response(ADDRESS, PORT) {
+    let args = Args::parse();
+
+    let address = args.address;
+    let port = args.port.unwrap_or(DEFAULT_SERVER_PORT);
+
+    let response = match mcping::get_server_response(address, port) {
         Ok(response) => response,
         Err(error) => {
             eprintln!("Error: {}", error);
