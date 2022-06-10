@@ -2,8 +2,10 @@
 name = "mcping"
 version = "0.1.0"
 edition = "2021"
+license = "AGPL-3.0-only"
+repository = "https://github.com/IoanThomas/mcping"
+readme = "README.md"
 description = "A simple tool to acquire Minecraft server information using the Server List Ping interface"
-repository = "https://github.com/IoanThomas/mcping/"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
