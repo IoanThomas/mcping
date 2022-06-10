@@ -6,17 +6,14 @@ const DEFAULT_SERVER_PORT: u16 = 25565;
 #[clap(author, version, about)]
 struct Args {
     pub address: String,
-    #[clap(short, long)]
-    pub port: Option<u16>,
+    #[clap(short, long, default_value_t = DEFAULT_SERVER_PORT)]
+    pub port: u16,
 }
 
 fn main() {
     let args = Args::parse();
 
-    let address = args.address;
-    let port = args.port.unwrap_or(DEFAULT_SERVER_PORT);
-
-    let response = match mcping::get_server_response(address, port) {
+    let response = match mcping::get_server_response(args.address, args.port) {
         Ok(response) => response,
         Err(error) => {
             eprintln!("Error: {}", error);
