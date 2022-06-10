@@ -50,4 +50,21 @@ mod tests {
         assert_eq!(buffer[0], 0x01);
         assert_eq!(buffer[1], 0x0e);
     }
+
+    #[test]
+    fn write_var_int_small() {
+        let mut buffer = vec![];
+        write_var_int(&mut buffer, 0x8a).expect("failed to write var int");
+
+        assert_eq!(buffer[0], 0x8a);
+    }
+
+    #[test]
+    fn write_var_int_large() {
+        let mut buffer = vec![];
+        write_var_int(&mut buffer, 0x38a).expect("failed to write var int");
+
+        assert_eq!(buffer[0], 0x8a);
+        assert_eq!(buffer[1], 0x07);
+    }
 }
