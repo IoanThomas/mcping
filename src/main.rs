@@ -1,25 +1,12 @@
+use crate::arguments::Arguments;
 use clap::Parser;
 
-const DEFAULT_SERVER_PORT: u16 = 25565;
-
-#[derive(Parser)]
-#[clap(author, version, about)]
-struct Args {
-    #[clap(help = "Server IP address or hostname")]
-    pub address: String,
-    #[clap(short, long, default_value_t = DEFAULT_SERVER_PORT, help = "Server port")]
-    pub port: u16,
-    #[clap(
-        long,
-        help = "List the names of active players, if the server provides them"
-    )]
-    pub list_players: bool,
-}
+mod arguments;
 
 fn main() {
-    let args = Args::parse();
+    let arguments = Arguments::parse();
 
-    let response = match mcping::get_server_response(args.address, args.port) {
+    let response = match mcping::get_server_response(arguments.address, arguments.port) {
         Ok(response) => response,
         Err(error) => {
             eprintln!("Error: {}", error);
@@ -38,7 +25,7 @@ fn main() {
     println!("Version: \"{}\" ({})", version_name, version_protocol);
     println!("Players: {}/{}", players_online, players_max);
 
-    if args.list_players {
+    if arguments.list_players {
         if let Some(players) = players {
             players
                 .into_iter()
