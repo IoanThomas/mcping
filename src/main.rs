@@ -5,10 +5,14 @@ const DEFAULT_SERVER_PORT: u16 = 25565;
 #[derive(Parser)]
 #[clap(author, version, about)]
 struct Args {
+    #[clap(help = "Server IP address or hostname")]
     pub address: String,
-    #[clap(short, long, default_value_t = DEFAULT_SERVER_PORT)]
+    #[clap(short, long, default_value_t = DEFAULT_SERVER_PORT, help = "Server port")]
     pub port: u16,
-    #[clap(long)]
+    #[clap(
+        long,
+        help = "List the names of active players, if the server provides them"
+    )]
     pub list_players: bool,
 }
 
