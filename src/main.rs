@@ -8,6 +8,8 @@ struct Args {
     pub address: String,
     #[clap(short, long, default_value_t = DEFAULT_SERVER_PORT)]
     pub port: u16,
+    #[clap(long)]
+    pub list_players: bool,
 }
 
 fn main() {
@@ -26,8 +28,18 @@ fn main() {
     let version_protocol = response.version.protocol;
     let players_online = response.players.online;
     let players_max = response.players.max;
+    let players = response.players.sample;
 
     println!("Description: {}", description);
     println!("Version: \"{}\" ({})", version_name, version_protocol);
     println!("Players: {}/{}", players_online, players_max);
+
+    if args.list_players {
+        if let Some(players) = players {
+            players
+                .into_iter()
+                .map(|player| player.name)
+                .for_each(|name| println!("  {}", name));
+        }
+    }
 }
