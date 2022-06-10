@@ -14,8 +14,8 @@ pub struct Arguments {
     pub address: String,
     #[clap(short, long, default_value_t = DEFAULT_SERVER_PORT, help = PORT_HELP_TEXT)]
     pub port: u16,
-    #[clap(long, help = LIST_PLAYERS_HELP_TEXT)]
+    #[clap(short, long, help = LIST_PLAYERS_HELP_TEXT)]
     pub list_players: bool,
-    #[clap(long, help = SHOW_FAVICON_HELP_TEXT)]
+    #[clap(short = 'f', long, help = SHOW_FAVICON_HELP_TEXT)]
     pub show_favicon: bool,
 }
