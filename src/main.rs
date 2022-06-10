@@ -1,5 +1,6 @@
 use crate::arguments::Arguments;
 use clap::Parser;
+use std::borrow::Cow;
 
 mod arguments;
 
@@ -20,6 +21,7 @@ fn main() {
     let players_online = response.players.online;
     let players_max = response.players.max;
     let players = response.players.sample;
+    let favicon = response.favicon;
 
     println!("Description: {}", description);
     println!("Version: \"{}\" ({})", version_name, version_protocol);
@@ -32,5 +34,15 @@ fn main() {
                 .map(|player| player.name)
                 .for_each(|name| println!("  {}", name));
         }
+    }
+
+    println!("{}", favicon_line(favicon, arguments.show_favicon));
+}
+
+fn favicon_line(favicon: Option<String>, show_favicon: bool) -> Cow<'static, str> {
+    match (favicon, show_favicon) {
+        (None, _) => "Has Favicon: No".into(),
+        (Some(_), false) => "Has Favicon: Yes".into(),
+        (Some(favicon), true) => format!("Favicon: {}", favicon).into(),
     }
 }

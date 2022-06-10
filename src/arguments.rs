@@ -2,8 +2,8 @@ use clap::Parser;
 
 const ADDRESS_HELP_TEXT: &str = "Server IP address or hostname";
 const PORT_HELP_TEXT: &str = "Server port";
-const LIST_PLAYERS_HELP_TEXT: &str =
-    "List the names of active players, if the server provides them";
+const LIST_PLAYERS_HELP_TEXT: &str = "List the names of active players if the server provides them";
+const SHOW_FAVICON_HELP_TEXT: &str = "Print the encoded favicon (very long) if the server has one";
 
 const DEFAULT_SERVER_PORT: u16 = 25565;
 
@@ -16,4 +16,6 @@ pub struct Arguments {
     pub port: u16,
     #[clap(long, help = LIST_PLAYERS_HELP_TEXT)]
     pub list_players: bool,
+    #[clap(long, help = SHOW_FAVICON_HELP_TEXT)]
+    pub show_favicon: bool,
 }
