@@ -1,4 +1,4 @@
-use crate::{result, Error};
+use crate::{parse, result, Error};
 use mc_varint::{VarInt, VarIntWrite};
 use std::io::Write;
 
@@ -16,7 +16,7 @@ pub fn write_var_int(buffer: &mut Vec<u8>, data: impl Into<VarInt>) -> result::R
 
 pub fn write_string(buffer: &mut Vec<u8>, data: impl AsRef<str>) -> result::Result<()> {
     let data = data.as_ref();
-    let length = i32::try_from(data.len()).map_err(|_| Error::IntConversion)?;
+    let length = parse::usize_to_i32(data.len())?;
 
     write_var_int(buffer, length)?;
 

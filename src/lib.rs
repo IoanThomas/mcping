@@ -5,6 +5,7 @@ use mc_varint::VarInt;
 mod buffer;
 mod connection;
 pub mod error;
+mod parse;
 pub mod result;
 pub mod server;
 
@@ -24,7 +25,7 @@ pub fn get_server_response(address: impl AsRef<str>, port: u16) -> result::Resul
     let response_length = connection::receive_var_int(&mut connection)?;
 
     let response_length = i32::from(response_length);
-    let response_length = usize::try_from(response_length).map_err(|_| Error::IntConversion)?;
+    let response_length = parse::i32_to_usize(response_length)?;
 
     let json_bytes = connection::receive_bytes(&mut connection, response_length)?;
 
@@ -69,7 +70,7 @@ fn create_packet(id: impl Into<VarInt>, data: &[u8]) -> result::Result<Vec<u8>> 
     buffer::write_var_int(&mut id_bytes, id)?;
 
     let packet_length = id_bytes.len() + data.len();
-    let packet_length = i32::try_from(packet_length).map_err(|_| Error::IntConversion)?;
+    let packet_length = parse::usize_to_i32(packet_length)?;
 
     let mut bytes = vec![];
 
