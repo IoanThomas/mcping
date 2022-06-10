@@ -24,14 +24,10 @@ pub fn get_server_response(address: impl AsRef<str>, port: u16) -> result::Resul
     let _packet_id = connection::receive_var_int(&mut connection)?;
     let response_length = connection::receive_var_int(&mut connection)?;
 
-    let response_length = i32::from(response_length);
-    let response_length = parse::i32_to_usize(response_length)?;
-
+    let response_length = parse::i32_to_usize(response_length.into())?;
     let json_bytes = connection::receive_bytes(&mut connection, response_length)?;
 
-    let response = serde_json::from_slice::<Response>(&json_bytes).map_err(|_| Error::JsonParse)?;
-
-    Ok(response)
+    create_response_from_json_bytes(&json_bytes)
 }
 
 fn create_handshake_packet(address: impl AsRef<str>, port: u16) -> result::Result<Vec<u8>> {
@@ -69,9 +65,7 @@ fn create_packet(id: impl Into<VarInt>, data: &[u8]) -> result::Result<Vec<u8>> 
     let mut id_bytes = vec![];
     buffer::write_var_int(&mut id_bytes, id)?;
 
-    let packet_length = id_bytes.len() + data.len();
-    let packet_length = parse::usize_to_i32(packet_length)?;
-
+    let packet_length = parse::usize_to_i32(id_bytes.len() + data.len())?;
     let mut bytes = vec![];
 
     buffer::write_var_int(&mut bytes, packet_length)?;
@@ -79,4 +73,8 @@ fn create_packet(id: impl Into<VarInt>, data: &[u8]) -> result::Result<Vec<u8>> 
     buffer::write_bytes(&mut bytes, data)?;
 
     Ok(bytes)
+}
+
+fn create_response_from_json_bytes(json_bytes: &[u8]) -> result::Result<Response> {
+    serde_json::from_slice::<Response>(json_bytes).map_err(|_| Error::JsonParse)
 }
