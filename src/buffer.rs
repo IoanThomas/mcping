@@ -86,4 +86,15 @@ mod tests {
         assert_eq!(buffer[1], 104);
         assert_eq!(buffer[5], 111);
     }
+
+    #[test]
+    fn write_byte_array() {
+        let mut buffer = vec![];
+        write_bytes(&mut buffer, &[0x12, 0x34, 0x56, 0x78]).expect("failed to write string");
+
+        assert_eq!(buffer[0], 0x12);
+        assert_eq!(buffer[1], 0x34);
+        assert_eq!(buffer[2], 0x56);
+        assert_eq!(buffer[3], 0x78);
+    }
 }
