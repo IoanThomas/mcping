@@ -1,6 +1,7 @@
 use crate::error::Error;
 use crate::server::response::Response;
 use mc_varint::VarInt;
+use std::num::NonZeroU16;
 
 mod buffer;
 mod connection;
@@ -9,7 +10,7 @@ mod parse;
 pub mod result;
 pub mod server;
 
-pub fn get_server_response(address: impl AsRef<str>, port: u16) -> result::Result<Response> {
+pub fn get_server_response(address: impl AsRef<str>, port: NonZeroU16) -> result::Result<Response> {
     let address = address.as_ref();
 
     let handshake_packet = create_handshake_packet(address, port)?;
@@ -30,7 +31,7 @@ pub fn get_server_response(address: impl AsRef<str>, port: u16) -> result::Resul
     create_response_from_json_bytes(&json_bytes)
 }
 
-fn create_handshake_packet(address: impl AsRef<str>, port: u16) -> result::Result<Vec<u8>> {
+fn create_handshake_packet(address: impl AsRef<str>, port: NonZeroU16) -> result::Result<Vec<u8>> {
     const HANDSHAKE_PACKET_ID: i32 = 0;
     const UNKNOWN_PROTOCOL_VERSION: i32 = -1;
     const STATUS_STATE: i32 = 1;
@@ -48,14 +49,14 @@ fn create_request_packet() -> result::Result<Vec<u8>> {
 fn create_handshake_data(
     protocol_version: impl Into<VarInt>,
     server_address: impl AsRef<str>,
-    server_port: u16,
+    server_port: NonZeroU16,
     next_state: impl Into<VarInt>,
 ) -> result::Result<Vec<u8>> {
     let mut bytes = vec![];
 
     buffer::write_var_int(&mut bytes, protocol_version)?;
     buffer::write_string(&mut bytes, server_address)?;
-    buffer::write_u16(&mut bytes, server_port)?;
+    buffer::write_u16(&mut bytes, server_port.get())?;
     buffer::write_var_int(&mut bytes, next_state)?;
 
     Ok(bytes)

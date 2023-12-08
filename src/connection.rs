@@ -2,9 +2,10 @@ use crate::{result, Error};
 use mc_varint::{VarInt, VarIntRead};
 use std::io::{Read, Write};
 use std::net::TcpStream;
+use std::num::NonZeroU16;
 
-pub fn create(address: impl AsRef<str>, port: u16) -> result::Result<TcpStream> {
-    TcpStream::connect((address.as_ref(), port)).map_err(|_| Error::Connect)
+pub fn create(address: impl AsRef<str>, port: NonZeroU16) -> result::Result<TcpStream> {
+    TcpStream::connect((address.as_ref(), port.get())).map_err(|_| Error::Connect)
 }
 
 pub fn send_data(connection: &mut TcpStream, data: &[u8]) -> result::Result<()> {
