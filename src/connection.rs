@@ -20,7 +20,7 @@ pub fn receive_var_int(connection: &mut TcpStream) -> result::Result<VarInt> {
 pub fn receive_bytes(connection: &mut TcpStream, count: usize) -> result::Result<Vec<u8>> {
     let mut json_bytes = vec![0; count];
     connection
-        .read(&mut json_bytes)
+        .read_exact(&mut json_bytes)
         .map_err(|_| Error::ConnectionRead)?;
 
     Ok(json_bytes)
