@@ -5,24 +5,22 @@ use std::net::TcpStream;
 use std::num::NonZeroU16;
 
 pub fn create(address: impl AsRef<str>, port: NonZeroU16) -> result::Result<TcpStream> {
-    TcpStream::connect((address.as_ref(), port.get())).map_err(|_| Error::Connect)
+    TcpStream::connect((address.as_ref(), port.get())).map_err(Error::Connect)
 }
 
 pub fn send_data(connection: &mut TcpStream, data: &[u8]) -> result::Result<()> {
-    connection
-        .write_all(data)
-        .map_err(|_| Error::ConnectionWrite)
+    connection.write_all(data).map_err(Error::ConnectionWrite)
 }
 
 pub fn receive_var_int(connection: &mut TcpStream) -> result::Result<VarInt> {
-    connection.read_var_int().map_err(|_| Error::ConnectionRead)
+    connection.read_var_int().map_err(Error::ConnectionRead)
 }
 
 pub fn receive_bytes(connection: &mut TcpStream, count: usize) -> result::Result<Vec<u8>> {
     let mut json_bytes = vec![0; count];
     connection
         .read_exact(&mut json_bytes)
-        .map_err(|_| Error::ConnectionRead)?;
+        .map_err(Error::ConnectionRead)?;
 
     Ok(json_bytes)
 }

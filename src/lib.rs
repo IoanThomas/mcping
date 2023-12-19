@@ -80,5 +80,5 @@ fn create_packet(id: impl Into<VarInt>, data: &[u8]) -> Result<Vec<u8>> {
 }
 
 fn create_response_from_json_bytes(json_bytes: &[u8]) -> Result<Response> {
-    serde_json::from_slice::<Response>(json_bytes).map_err(|_| Error::JsonParse)
+    serde_json::from_slice(json_bytes).map_err(Error::JsonParse)
 }

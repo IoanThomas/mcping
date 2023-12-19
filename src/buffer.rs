@@ -5,13 +5,13 @@ use std::io::Write;
 pub fn write_u16(buffer: &mut Vec<u8>, data: u16) -> result::Result<()> {
     buffer
         .write_all(&data.to_be_bytes())
-        .map_err(|_| Error::BufferWrite)
+        .map_err(Error::BufferWrite)
 }
 
 pub fn write_var_int(buffer: &mut Vec<u8>, data: impl Into<VarInt>) -> result::Result<()> {
     buffer
         .write_var_int(data.into())
-        .map_err(|_| Error::BufferWrite)
+        .map_err(Error::BufferWrite)
 }
 
 pub fn write_string(buffer: &mut Vec<u8>, data: impl AsRef<str>) -> result::Result<()> {
@@ -22,11 +22,11 @@ pub fn write_string(buffer: &mut Vec<u8>, data: impl AsRef<str>) -> result::Resu
 
     buffer
         .write_all(data.as_bytes())
-        .map_err(|_| Error::BufferWrite)
+        .map_err(Error::BufferWrite)
 }
 
 pub fn write_bytes(buffer: &mut Vec<u8>, data: &[u8]) -> result::Result<()> {
-    buffer.write_all(data).map_err(|_| Error::BufferWrite)
+    buffer.write_all(data).map_err(Error::BufferWrite)
 }
 
 #[cfg(test)]
