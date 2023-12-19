@@ -1,3 +1,4 @@
+pub mod chat;
 pub mod description;
 pub mod player;
 pub mod player_list;

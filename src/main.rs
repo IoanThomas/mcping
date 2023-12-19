@@ -1,5 +1,6 @@
 use crate::arguments::Arguments;
 use clap::Parser;
+use mcping::server::description::Description;
 use std::borrow::Cow;
 
 mod arguments;
@@ -15,7 +16,10 @@ fn main() {
         }
     };
 
-    let description = response.description.text;
+    let description = match response.description {
+        Description::Text(text) => text,
+        Description::Chat(chat) => chat.text,
+    };
     let version_name = response.version.name;
     let version_protocol = response.version.protocol;
     let players_online = response.players.online;

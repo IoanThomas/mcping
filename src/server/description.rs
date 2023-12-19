@@ -1,6 +1,9 @@
+use crate::server::chat::Chat;
 use serde::Deserialize;
 
 #[derive(Deserialize)]
-pub struct Description {
-    pub text: String,
+#[serde(untagged)]
+pub enum Description {
+    Text(String),
+    Chat(Chat),
 }
