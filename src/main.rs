@@ -55,7 +55,7 @@ fn regular_response(arguments: Arguments) {
             players
                 .into_iter()
                 .map(|player| player.name)
-                .for_each(|name| println!("\t{name}"));
+                .for_each(|name| println!("\t* {name}"));
         }
     }
 
