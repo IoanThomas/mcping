@@ -1,5 +1,5 @@
 use crate::arguments::Arguments;
-use clap::{arg, Parser};
+use clap::Parser;
 use mcping::response::Description;
 use std::borrow::Cow;
 
