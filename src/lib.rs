@@ -53,7 +53,7 @@ fn create_handshake_packet(address: impl AsRef<str>, port: NonZeroU16) -> Result
     create_packet(HANDSHAKE_PACKET_ID, &data)
 }
 
-fn create_request_packet() -> result::Result<Vec<u8>> {
+fn create_request_packet() -> Result<Vec<u8>> {
     const REQUEST_PACKET_ID: i32 = 0;
 
     create_packet(REQUEST_PACKET_ID, &[])
