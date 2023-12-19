@@ -1,5 +1,6 @@
 use std::fmt::{Display, Formatter};
 use std::num::TryFromIntError;
+use std::string::FromUtf8Error;
 use std::{error, fmt, io};
 
 #[derive(Debug)]
@@ -9,6 +10,7 @@ pub enum Error {
     ConnectionWrite(io::Error),
     ConnectionRead(io::Error),
     JsonParse(serde_json::Error),
+    Utf8Parse(FromUtf8Error),
     IntConversion(TryFromIntError),
 }
 
@@ -20,6 +22,7 @@ impl Display for Error {
             Self::ConnectionWrite(error) => write!(f, "failed to send data to server: {error}"),
             Self::ConnectionRead(error) => write!(f, "failed to receive data from server: {error}"),
             Self::JsonParse(error) => write!(f, "failed to parse JSON response: {error}"),
+            Self::Utf8Parse(error) => write!(f, "failed to parse UTF-8 string: {error}"),
             Self::IntConversion(error) => write!(f, "failed to convert integer: {error}"),
         }
     }

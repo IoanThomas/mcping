@@ -14,6 +14,18 @@ mod parse;
 mod result;
 
 pub fn get_server_response(address: impl AsRef<str>, port: NonZeroU16) -> Result<Response> {
+    let json_bytes = get_server_response_raw(address, port)?;
+
+    create_response_from_json_bytes(&json_bytes)
+}
+
+pub fn get_server_response_json(address: impl AsRef<str>, port: NonZeroU16) -> Result<String> {
+    let json_bytes = get_server_response_raw(address, port)?;
+
+    String::from_utf8(json_bytes).map_err(Error::Utf8Parse)
+}
+
+fn get_server_response_raw(address: impl AsRef<str>, port: NonZeroU16) -> Result<Vec<u8>> {
     let address = address.as_ref();
 
     let handshake_packet = create_handshake_packet(address, port)?;
@@ -29,9 +41,7 @@ pub fn get_server_response(address: impl AsRef<str>, port: NonZeroU16) -> Result
     let response_length = connection::receive_var_int(&mut connection)?;
 
     let response_length = parse::i32_to_usize(response_length.into())?;
-    let json_bytes = connection::receive_bytes(&mut connection, response_length)?;
-
-    create_response_from_json_bytes(&json_bytes)
+    connection::receive_bytes(&mut connection, response_length)
 }
 
 fn create_handshake_packet(address: impl AsRef<str>, port: NonZeroU16) -> Result<Vec<u8>> {
