@@ -1,5 +1,5 @@
 use crate::arguments::Arguments;
-use clap::Parser;
+use clap::{arg, Parser};
 use mcping::response::Description;
 use std::borrow::Cow;
 
@@ -8,6 +8,25 @@ mod arguments;
 fn main() {
     let arguments = Arguments::parse();
 
+    match arguments.json {
+        true => json_response(arguments),
+        false => regular_response(arguments),
+    };
+}
+
+fn json_response(arguments: Arguments) {
+    let response = match mcping::get_server_response_json(arguments.address, arguments.port) {
+        Ok(response) => response,
+        Err(error) => {
+            eprintln!("Error: {error}");
+            return;
+        }
+    };
+
+    println!("{response}");
+}
+
+fn regular_response(arguments: Arguments) {
     let response = match mcping::get_server_response(arguments.address, arguments.port) {
         Ok(response) => response,
         Err(error) => {
