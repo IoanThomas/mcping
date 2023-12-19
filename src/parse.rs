@@ -1,10 +1,11 @@
-use crate::{result, Error};
+use crate::error::Error;
+use crate::result::Result;
 
-pub fn i32_to_usize(value: i32) -> result::Result<usize> {
+pub fn i32_to_usize(value: i32) -> Result<usize> {
     usize::try_from(value).map_err(Error::IntConversion)
 }
 
-pub fn usize_to_i32(value: usize) -> result::Result<i32> {
+pub fn usize_to_i32(value: usize) -> Result<i32> {
     i32::try_from(value).map_err(Error::IntConversion)
 }
 

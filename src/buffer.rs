@@ -1,20 +1,22 @@
-use crate::{parse, result, Error};
+use crate::error::Error;
+use crate::parse;
+use crate::result::Result;
 use mc_varint::{VarInt, VarIntWrite};
 use std::io::Write;
 
-pub fn write_u16(buffer: &mut Vec<u8>, data: u16) -> result::Result<()> {
+pub fn write_u16(buffer: &mut Vec<u8>, data: u16) -> Result<()> {
     buffer
         .write_all(&data.to_be_bytes())
         .map_err(Error::BufferWrite)
 }
 
-pub fn write_var_int(buffer: &mut Vec<u8>, data: impl Into<VarInt>) -> result::Result<()> {
+pub fn write_var_int(buffer: &mut Vec<u8>, data: impl Into<VarInt>) -> Result<()> {
     buffer
         .write_var_int(data.into())
         .map_err(Error::BufferWrite)
 }
 
-pub fn write_string(buffer: &mut Vec<u8>, data: impl AsRef<str>) -> result::Result<()> {
+pub fn write_string(buffer: &mut Vec<u8>, data: impl AsRef<str>) -> Result<()> {
     let data = data.as_ref();
     let length = parse::usize_to_i32(data.len())?;
 
@@ -25,7 +27,7 @@ pub fn write_string(buffer: &mut Vec<u8>, data: impl AsRef<str>) -> result::Resu
         .map_err(Error::BufferWrite)
 }
 
-pub fn write_bytes(buffer: &mut Vec<u8>, data: &[u8]) -> result::Result<()> {
+pub fn write_bytes(buffer: &mut Vec<u8>, data: &[u8]) -> Result<()> {
     buffer.write_all(data).map_err(Error::BufferWrite)
 }
 
