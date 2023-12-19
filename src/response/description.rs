@@ -1,4 +1,4 @@
-use crate::server::chat::Chat;
+use crate::response::chat::Chat;
 use serde::Deserialize;
 
 #[derive(Deserialize)]

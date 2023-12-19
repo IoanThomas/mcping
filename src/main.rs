@@ -1,6 +1,6 @@
 use crate::arguments::Arguments;
 use clap::Parser;
-use mcping::server::description::Description;
+use mcping::response::Description;
 use std::borrow::Cow;
 
 mod arguments;

@@ -1,16 +1,19 @@
-use crate::error::Error;
-use crate::server::response::Response;
+pub use crate::error::Error;
+pub use crate::result::Result;
+
+use crate::response::Response;
 use mc_varint::VarInt;
 use std::num::NonZeroU16;
 
+pub mod response;
+
 mod buffer;
 mod connection;
-pub mod error;
+mod error;
 mod parse;
-pub mod result;
-pub mod server;
+mod result;
 
-pub fn get_server_response(address: impl AsRef<str>, port: NonZeroU16) -> result::Result<Response> {
+pub fn get_server_response(address: impl AsRef<str>, port: NonZeroU16) -> Result<Response> {
     let address = address.as_ref();
 
     let handshake_packet = create_handshake_packet(address, port)?;
@@ -31,7 +34,7 @@ pub fn get_server_response(address: impl AsRef<str>, port: NonZeroU16) -> result
     create_response_from_json_bytes(&json_bytes)
 }
 
-fn create_handshake_packet(address: impl AsRef<str>, port: NonZeroU16) -> result::Result<Vec<u8>> {
+fn create_handshake_packet(address: impl AsRef<str>, port: NonZeroU16) -> Result<Vec<u8>> {
     const HANDSHAKE_PACKET_ID: i32 = 0;
     const UNKNOWN_PROTOCOL_VERSION: i32 = -1;
     const STATUS_STATE: i32 = 1;
@@ -51,7 +54,7 @@ fn create_handshake_data(
     server_address: impl AsRef<str>,
     server_port: NonZeroU16,
     next_state: impl Into<VarInt>,
-) -> result::Result<Vec<u8>> {
+) -> Result<Vec<u8>> {
     let mut bytes = vec![];
 
     buffer::write_var_int(&mut bytes, protocol_version)?;
@@ -62,7 +65,7 @@ fn create_handshake_data(
     Ok(bytes)
 }
 
-fn create_packet(id: impl Into<VarInt>, data: &[u8]) -> result::Result<Vec<u8>> {
+fn create_packet(id: impl Into<VarInt>, data: &[u8]) -> Result<Vec<u8>> {
     let mut id_bytes = vec![];
     buffer::write_var_int(&mut id_bytes, id)?;
 
@@ -76,6 +79,6 @@ fn create_packet(id: impl Into<VarInt>, data: &[u8]) -> result::Result<Vec<u8>> 
     Ok(bytes)
 }
 
-fn create_response_from_json_bytes(json_bytes: &[u8]) -> result::Result<Response> {
+fn create_response_from_json_bytes(json_bytes: &[u8]) -> Result<Response> {
     serde_json::from_slice::<Response>(json_bytes).map_err(|_| Error::JsonParse)
 }

@@ -1,4 +1,4 @@
-use crate::server::player::Player;
+use crate::response::player::Player;
 use serde::Deserialize;
 
 #[derive(Deserialize)]
